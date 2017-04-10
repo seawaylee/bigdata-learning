@@ -14,17 +14,17 @@ public class LockTest
 
     public static void main(String[] args) throws InterruptedException
     {
-        //Thread t1 = new MyThread(lock);
-        //Thread t2 = new MyThread(lock);
-        //
-        //t1.start();
-        //t2.start();
-        //
-        //Thread.sleep(5000);
-        //
-        //t2.interrupt();
+        Thread t1 = new MyThread(lock);
+        Thread t2 = new MyThread(lock);
 
-        System.out.println(Runtime.getRuntime().availableProcessors());
+        t1.start();
+        t2.start();
+
+        Thread.sleep(5000);
+
+        t2.interrupt();
+
+        //System.out.println(Runtime.getRuntime().availableProcessors());
     }
 }
 
@@ -49,8 +49,14 @@ class MyThread extends Thread
             System.out.println(Thread.currentThread().getName() + "线程被中断");
         } finally
         {
-            System.out.println(Thread.currentThread() + " release the lock");
-            lock.unlock();
+            System.out.println(Thread.currentThread().getName() + " release the lock");
+            try
+            {
+                lock.unlock();
+            }catch (Exception e)
+            {
+                System.out.println(Thread.currentThread().getName() + " 释放锁异常");
+            }
         }
     }
 
