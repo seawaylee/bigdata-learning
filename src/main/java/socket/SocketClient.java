@@ -22,7 +22,7 @@ public class SocketClient
         InputStream inputStream = socket.getInputStream();
         Scanner scanner = new Scanner(System.in);
         String input;
-        while ((input = scanner.nextLine()) != "end\n")
+        while (!(input = scanner.nextLine()).equals("end"))
         {
             // 向服务端发送数据流
             pw.println(input);
