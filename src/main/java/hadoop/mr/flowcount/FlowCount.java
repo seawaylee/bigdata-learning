@@ -7,6 +7,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -25,12 +26,14 @@ public class FlowCount
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException, ClassNotFoundException
     {
         String inputPath = "/Users/lixiwei-mac/Documents/IdeaProjects/bigdatalearning/src/main/java/hadoop/data/flow.txt";
-        String outputPath = "hdfs://localhost:9000/flowbean/result";
+        //String inputPath = "hdfs://hadoop1:9000/flowbean/flow.txt";
+        String outputPath = "/Users/lixiwei-mac/Documents/IdeaProjects/bigdatalearning/src/main/java/hadoop/data/flow/result/";
         Configuration conf = new Configuration();
         //conf.set("mapreduce.framework.name", "yarn");
-        //conf.set("yarn.resourcemanager.hostname", "localhost");
+        //conf.set("yarn.resourcemanager.hostname", "hadoop1");
 
-        Job job = Job.getInstance(conf);
+        Job job = Job.getInstance(conf );
+        job.setUser("root");
         job.setJarByClass(FlowCount.class);
 
         job.setMapperClass(FlowCountMapper.class);
@@ -42,9 +45,12 @@ public class FlowCount
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(FlowBean.class);
 
+        //job.setPartitionerClass(FlowCountPartitioner.class);
+        //job.setNumReduceTasks(4);
+
         FileInputFormat.setInputPaths(job, new Path(inputPath));
 
-        FileSystem fs = FileSystem.get(new URI("hdfs://localhost:9000"), conf, "NikoBelic");
+        FileSystem fs = FileSystem.get(new URI(outputPath), conf, "NikoBelic");
         if (fs.exists(new Path(outputPath)))
         {
             fs.delete(new Path(outputPath));
@@ -54,7 +60,8 @@ public class FlowCount
         job.waitForCompletion(true);
     }
 }
-class FlowCountMapper extends Mapper<LongWritable,Text,Text,FlowBean>
+
+class FlowCountMapper extends Mapper<LongWritable, Text, Text, FlowBean>
 {
 
     @Override
@@ -64,12 +71,12 @@ class FlowCountMapper extends Mapper<LongWritable,Text,Text,FlowBean>
         String phoneNumber = values[1];
         Long upFlow = Long.parseLong(values[values.length - 3]);
         Long downFlow = Long.parseLong(values[values.length - 2]);
-        FlowBean flowBean = new FlowBean(upFlow,downFlow);
-        context.write(new Text(phoneNumber),flowBean);
+        FlowBean flowBean = new FlowBean(upFlow, downFlow);
+        context.write(new Text(phoneNumber), flowBean);
     }
 }
 
-class FlowCountReducer extends Reducer<Text,FlowBean,Text,FlowBean>
+class FlowCountReducer extends Reducer<Text, FlowBean, Text, FlowBean>
 {
     @Override
     protected void reduce(Text key, Iterable<FlowBean> values, Context context) throws IOException, InterruptedException
@@ -84,7 +91,16 @@ class FlowCountReducer extends Reducer<Text,FlowBean,Text,FlowBean>
             totalUp += currBean.getUpFlow();
             totalDown += currBean.getDownFlow();
         }
-        context.write(key, new FlowBean(totalUp,totalDown));
-        //Thread.sleep(1000);
+        context.write(key, new FlowBean(totalUp, totalDown));
+    }
+}
+
+class FlowCountPartitioner extends Partitioner<Text, FlowBean>
+{
+
+    @Override
+    public int getPartition(Text key, FlowBean value, int i)
+    {
+        return key.charAt(3) % 4;
     }
 }

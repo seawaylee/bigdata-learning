@@ -36,6 +36,6 @@ public class WordCountReducer extends Reducer<Text,IntWritable,Text,IntWritable>
         }
 
         context.write(key, new IntWritable(count));
-        System.out.println("ReduceTask正在处理第 " + key.toString() + " 行文本,ObjHashCode:" + this.hashCode() + ",IP:"  + Inet4Address.getLocalHost().getHostAddress());
+        //System.out.println("ReduceTask正在处理第 " + key.toString() + " 行文本,ObjHashCode:" + this.hashCode() + ",IP:"  + Inet4Address.getLocalHost().getHostAddress());
     }
 }

@@ -6,6 +6,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import java.io.IOException;
@@ -26,8 +28,12 @@ public class WordCountDriver
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException
     {
         Configuration conf = new Configuration();
-        conf.set("mapreduce.framework.name", "yarn");
-        conf.set("yarn.resourcemanager.hostname", "10.5.151.241");
+        //conf.set("mapreduce.framework.name", "yarn");
+        //conf.set("yarn.resourcemanager.hostname", "localhost");
+
+        String inputPath = "/Users/lixiwei-mac/Documents/IdeaProjects/bigdatalearning/src/main/java/hadoop/data/wordcount/inputs";
+        String outputPath = "/Users/lixiwei-mac/Documents/IdeaProjects/bigdatalearning/src/main/java/hadoop/data/wordcount/result";
+
         //conf.set("mapred.jar", "hadoop.jar");
         Job job = Job.getInstance(conf);
 
@@ -36,11 +42,18 @@ public class WordCountDriver
         // setJar方法传入jar包绝对路径，必须将jar部署到指定位置，很不灵活
         // 而使用setJarByClass，可以从JVM中找到该类，比较常用
         job.setJarByClass(WordCountDriver.class);
-        job.setJar("hadoop.jar");
+        //job.setJar("hadoop.jar");
 
         // 指定本业务job要使用的Map和Reduce业务类
         job.setMapperClass(WordCountMapper.class);
         job.setReducerClass(WordCountReducer.class);
+        job.setCombinerClass(WordCountReducer.class);
+        // 文件过多且过小，导致mapTask过多引起性能底下，可以将split合并
+        job.setInputFormatClass(CombineTextInputFormat.class);
+        // 通过设置合并后最大切片大小与最小切片大小来提升效率
+        CombineTextInputFormat.setMaxInputSplitSize(job,4 * 1024);
+        CombineTextInputFormat.setMinInputSplitSize(job,1 * 1024);
+        //job.setNumReduceTasks(4);
 
         // 指定Mapper输数据的KV类型
         job.setMapOutputKeyClass(Text.class);
@@ -51,15 +64,15 @@ public class WordCountDriver
         job.setOutputValueClass(IntWritable.class);
 
         // 指定job的输入源
-        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileInputFormat.setInputPaths(job, new Path(inputPath));
 
         // 指定job的输出结构存储位置
-        FileSystem fs = FileSystem.get(new URI("hdfs://hadoop1:9000"), conf, "root");
-        if (fs.exists(new Path(args[1])))
+        FileSystem fs = FileSystem.get(new URI("/"), conf, "root");
+        if (fs.exists(new Path(outputPath)))
         {
-            fs.delete(new Path(args[1]), true);
+            fs.delete(new Path(outputPath), true);
         }
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
 
         // 将job中配置的相关参数，以及job所用的java类所在的jar包提交给yarn去运行
         //job.submit();

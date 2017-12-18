@@ -22,6 +22,13 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-core</artifactId>
+            <version>1.1.1</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
@@ -64,7 +71,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
@@ -75,6 +81,13 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.10</version>
+        </dependency>
+
     </dependencies>
 
 </project>

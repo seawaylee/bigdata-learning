@@ -40,6 +40,6 @@ public class WordCountMapper extends Mapper<LongWritable,Text,Text,IntWritable>
             // 可以根据单词分发，以便于相同的单词会到相同的ReduceTask中
             context.write(new Text(word), new IntWritable(1));
         }
-        System.out.println("MapTask正在处理第 " + key.toString() + " 行文本,ObjHashCode:" + this.hashCode() + ",IP:"  + Inet4Address.getLocalHost().getHostAddress());
+        //System.out.println("MapTask正在处理第 " + key.toString() + " 行文本,ObjHashCode:" + this.hashCode() + ",IP:"  + Inet4Address.getLocalHost().getHostAddress());
     }
 }
