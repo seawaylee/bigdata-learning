@@ -112,10 +112,10 @@ public class StreamApi
     public static void main(String[] args) throws IOException
     {
         List<Integer> source = new ArrayList<>();
-        source.add(1);
-        source.add(2);
-        source.add(3);
-        source.add(4);
+        source.add(126);
+        source.add(127);
+        source.add(128);
+        source.add(8888888);
         List<Integer> test = new ArrayList<>();
         test.add(4);
         test.add(5);
@@ -124,7 +124,11 @@ public class StreamApi
         // 123
         //List<Integer> collect = source.stream().filter(sourceValue -> test.stream().allMatch(testValue -> !testValue.equals(sourceValue))).collect(Collectors.toList());
         // 4
-        List<Integer> collect = source.stream().filter(sourceValue -> test.stream().anyMatch(testValue -> testValue.equals(sourceValue))).collect(Collectors.toList());
-        System.out.println(collect);
+        //List<Integer> collect = source.stream().filter(sourceValue -> test.stream().anyMatch(testValue -> testValue.equals(sourceValue))).collect(Collectors.toList());
+        //System.out.println(collect);
+        System.out.println(source.contains(126));
+        System.out.println(source.contains(127));
+        System.out.println(source.contains(128));
+        System.out.println(source.contains(8888888));
     }
 }

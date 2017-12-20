@@ -10,6 +10,6 @@ public class ToLowerCase extends UDF
 {
     public String evaluate(String field)
     {
-        return field.toLowerCase();
+        return field.toUpperCase();
     }
 }
