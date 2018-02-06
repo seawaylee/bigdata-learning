@@ -1,4 +1,4 @@
-package hive;
+package hive.udf;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

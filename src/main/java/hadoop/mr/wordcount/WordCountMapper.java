@@ -3,6 +3,7 @@ package hadoop.mr.wordcount;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class WordCountMapper extends Mapper<LongWritable,Text,Text,IntWritable>
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException
     {
+        System.out.println(((FileSplit) context.getInputSplit()).getPath().getName());
         // 将文本内容转换成字符串
         String line = value.toString();
         // 对一行文本切分成单词数组

@@ -1,4 +1,4 @@
-package hive;
+package hive.udf;
 
 import org.apache.hadoop.hive.ql.exec.UDF;
 
