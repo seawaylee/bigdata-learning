@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
+ * MD5 路由
  * @author NikoBelic
  * @create 2018/2/6 15:17
  */
