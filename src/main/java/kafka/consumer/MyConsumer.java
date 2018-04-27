@@ -26,6 +26,8 @@ public class MyConsumer implements Runnable{
         prop.put("key.deserializer", StringDeserializer.class);
         prop.put("value.deserializer", StringDeserializer.class);
         prop.put("group.id", "CountryCounter");
+        // 自动提交partition偏移量
+        prop.put("enable.auto.commit", true);
         consumer = new KafkaConsumer<>(prop);
     }
 
