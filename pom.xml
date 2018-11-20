@@ -44,7 +44,7 @@
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
-                        <configuration>
+                        <configuration>BookshelfService.javaBookshelfService.javaBookshelfService.java
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>

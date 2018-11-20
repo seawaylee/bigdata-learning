@@ -1,9 +1,11 @@
 package kafka.producer;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.io.Serializable;
 import java.util.Properties;
 import java.util.Random;
 
@@ -48,11 +50,37 @@ public class MyProducer implements Runnable {
         try {
 
             while (true) {
-                this.sendData(this.topicName, this.producerName + ":" + random.nextInt(10), "" + random.nextInt(1000));
-                Thread.sleep(1000);
+                this.sendData(this.topicName, this.producerName + ":" + random.nextInt(3), JSON.toJSONString(new MessageData(random.nextInt(10) + "", random.nextInt(999) + "")));
+                Thread.sleep(10);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class MessageData implements Serializable {
+        public String appId;
+        public String module;
+
+        public MessageData(String appId, String module) {
+            this.appId = appId;
+            this.module = module;
+        }
+
+        public String getAppId() {
+            return appId;
+        }
+
+        public void setAppId(String appId) {
+            this.appId = appId;
+        }
+
+        public String getModule() {
+            return module;
+        }
+
+        public void setModule(String module) {
+            this.module = module;
         }
     }
 }
