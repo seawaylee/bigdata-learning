@@ -50,8 +50,8 @@ public class MyProducer implements Runnable {
         try {
 
             while (true) {
-                this.sendData(this.topicName, this.producerName + ":" + random.nextInt(3), JSON.toJSONString(new MessageData(random.nextInt(10) + "", random.nextInt(999) + "")));
-                Thread.sleep(10);
+                this.sendData(this.topicName, this.producerName + ":" + random.nextInt(3), JSON.toJSONString(new MessageData(random.nextInt(10) + "", random.nextInt(999) + "", System.currentTimeMillis())));
+                Thread.sleep(1000);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,10 +61,20 @@ public class MyProducer implements Runnable {
     private class MessageData implements Serializable {
         public String appId;
         public String module;
+        public Long timestamp;
 
-        public MessageData(String appId, String module) {
+        public MessageData(String appId, String module, Long timestamp) {
             this.appId = appId;
             this.module = module;
+            this.timestamp = timestamp;
+        }
+
+        public Long getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(Long timestamp) {
+            this.timestamp = timestamp;
         }
 
         public String getAppId() {
@@ -82,5 +92,6 @@ public class MyProducer implements Runnable {
         public void setModule(String module) {
             this.module = module;
         }
+
     }
 }

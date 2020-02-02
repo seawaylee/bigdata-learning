@@ -22,9 +22,9 @@ public class KafkaMain {
         for (int i = 0; i < 1; i++) {
             MyProducer producer = new MyProducer("Producer-" + i, topic);
             producerPool.execute(new Thread(producer));
-            //MyConsumer consumer = new MyConsumer("Consumer-" + i, topic);
-            //myConsumerList.add(consumer);
-            //consumerPool.execute(new Thread(consumer));
+            MyConsumer consumer = new MyConsumer("Consumer-" + i, topic);
+            myConsumerList.add(consumer);
+            consumerPool.execute(new Thread(consumer));
         }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("Starting exit")));
 
